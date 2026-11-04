@@ -22,24 +22,6 @@ Homebrew does not support `brew install argium/urlencode-decode`.
 Source archives and checksums are also available on the
 [releases page](https://github.com/argium/urlencode-urldecode/releases).
 
-## Build
-
-Alternatively, clone the repository and build locally:
-
-```sh
-git clone https://github.com/argium/urlencode-urldecode.git
-cd urlencode-urldecode
-go build -o bin/urlencode ./cmd/urlencode
-go build -o bin/urldecode ./cmd/urldecode
-export PATH="$PWD/bin:$PATH"
-```
-
-To install both commands into your Go binary directory:
-
-```sh
-go install ./cmd/...
-```
-
 ## Usage
 
 Pass one argument, or omit it to read stdin until EOF:
@@ -70,17 +52,11 @@ printf '%s' 'hello%20world' | urldecode
   error on stderr and a non-zero exit status. Quote arguments containing spaces.
 - Arguments are literal input; there are no flags.
 
-## Publishing a release
+## Contributing
 
-Push a tag in the form `vMAJOR.MINOR.PATCH` to trigger the
-[release workflow](.github/workflows/release.yml). For example:
+See [CONTRIBUTING.md](CONTRIBUTING.md) for building from source, development checks
+and publishing releases.
 
-```sh
-git tag -a v0.2.0 -m "Release v0.2.0"
-git push origin v0.2.0
-```
+## Licence
 
-The workflow builds and checks both commands, then publishes a GitHub release
-with a source archive and `checksums.txt`. After it succeeds, update the URL and
-SHA-256 in [the Homebrew formula](Formula/urlencode-decode.rb) to that release and
-push the change to `main`.
+Licensed under the [MIT licence](LICENSE).
