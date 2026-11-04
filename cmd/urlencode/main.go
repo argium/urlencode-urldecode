@@ -5,7 +5,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/argium/go-urlencode-urldecode/internal/cli"
+	"github.com/argium/urlencode-urldecode/internal/cli"
 )
 
 func main() {

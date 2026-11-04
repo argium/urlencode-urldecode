@@ -8,7 +8,7 @@ library.
 Tap this repository and install both commands:
 
 ```sh
-brew tap argium/urlencode-decode https://github.com/argium/go-urlencode-urldecode
+brew tap argium/urlencode-decode https://github.com/argium/urlencode-urldecode
 brew install urlencode-decode
 ```
 
@@ -20,15 +20,15 @@ Homebrew installs Go as a build dependency.
 Homebrew does not support `brew install argium/urlencode-decode`.
 
 Source archives and checksums are also available on the
-[releases page](https://github.com/argium/go-urlencode-urldecode/releases).
+[releases page](https://github.com/argium/urlencode-urldecode/releases).
 
 ## Build
 
 Alternatively, clone the repository and build locally:
 
 ```sh
-git clone https://github.com/argium/go-urlencode-urldecode.git
-cd go-urlencode-urldecode
+git clone https://github.com/argium/urlencode-urldecode.git
+cd urlencode-urldecode
 go build -o bin/urlencode ./cmd/urlencode
 go build -o bin/urldecode ./cmd/urldecode
 export PATH="$PWD/bin:$PATH"
