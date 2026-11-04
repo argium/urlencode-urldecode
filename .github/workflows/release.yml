@@ -1,0 +1,67 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ github.ref_name }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out the tag
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Go
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+          cache: false
+
+      - name: Validate the tag and commands
+        run: |
+          set -euo pipefail
+          if [[ ! "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Expected a release tag in the form vMAJOR.MINOR.PATCH" >&2
+            exit 1
+          fi
+
+          go vet ./...
+          go test ./...
+          go build -trimpath -o "$RUNNER_TEMP/bin/" ./cmd/...
+
+          printf '%s' 'hello+world%26name%3DGo' > "$RUNNER_TEMP/expected"
+          "$RUNNER_TEMP/bin/urlencode" 'hello world&name=Go' > "$RUNNER_TEMP/actual"
+          cmp "$RUNNER_TEMP/expected" "$RUNNER_TEMP/actual"
+
+          printf '%s' 'hello world&name=Go' > "$RUNNER_TEMP/expected"
+          printf '%s' 'hello+world%26name%3DGo' |
+            "$RUNNER_TEMP/bin/urldecode" > "$RUNNER_TEMP/actual"
+          cmp "$RUNNER_TEMP/expected" "$RUNNER_TEMP/actual"
+
+      - name: Publish the source archive and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          archive="urlencode-decode-$RELEASE_TAG.tar.gz"
+          git archive --format=tar.gz --prefix="urlencode-decode-$RELEASE_TAG/" \
+            --output="$RUNNER_TEMP/$archive" HEAD
+          (
+            cd "$RUNNER_TEMP"
+            sha256sum "$archive" > checksums.txt
+          )
+          gh release create "$RELEASE_TAG" \
+            "$RUNNER_TEMP/$archive" "$RUNNER_TEMP/checksums.txt" \
+            --verify-tag --title "$RELEASE_TAG" --generate-notes

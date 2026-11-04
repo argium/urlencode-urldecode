@@ -1,4 +1,4 @@
-class UrlencodeUrldecode < Formula
+class UrlencodeDecode < Formula
   desc "URL-encode and decode text from arguments or standard input"
   homepage "https://github.com/argium/go-urlencode-urldecode"
   head "https://github.com/argium/go-urlencode-urldecode.git", branch: "main"

@@ -8,13 +8,19 @@ library.
 Tap this repository and install both commands:
 
 ```sh
-brew tap argium/urlencode-urldecode https://github.com/argium/go-urlencode-urldecode
-brew install --HEAD argium/urlencode-urldecode/urlencode-urldecode
+brew tap argium/urlencode-decode https://github.com/argium/go-urlencode-urldecode
+brew install urlencode-decode
 ```
 
-The formula builds the latest `main` branch from source and installs `urlencode`
-and `urldecode` on your PATH. Homebrew installs Go as a build dependency.
-Use `--HEAD` because there is no tagged release yet.
+The `urlencode-decode` package installs both `urlencode` and `urldecode` on your
+PATH. It builds a versioned release from source, verified with a SHA-256 checksum.
+Homebrew installs Go as a build dependency.
+
+`argium/urlencode-decode` is the tap name; `urlencode-decode` is the package name.
+Homebrew does not support `brew install argium/urlencode-decode`.
+
+Source archives and checksums are also available on the
+[releases page](https://github.com/argium/go-urlencode-urldecode/releases).
 
 ## Build
 
@@ -63,3 +69,18 @@ printf '%s' 'hello%20world' | urldecode
 - More than one argument, malformed percent escapes, and I/O failures produce an
   error on stderr and a non-zero exit status. Quote arguments containing spaces.
 - Arguments are literal input; there are no flags.
+
+## Publishing a release
+
+Push a tag in the form `vMAJOR.MINOR.PATCH` to trigger the
+[release workflow](.github/workflows/release.yml). For example:
+
+```sh
+git tag -a v0.2.0 -m "Release v0.2.0"
+git push origin v0.2.0
+```
+
+The workflow builds and checks both commands, then publishes a GitHub release
+with a source archive and `checksums.txt`. After it succeeds, update the URL and
+SHA-256 in [the Homebrew formula](Formula/urlencode-decode.rb) to that release and
+push the change to `main`.
